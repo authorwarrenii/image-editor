@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Editor</title>
-    <script src="https://scaleflex.it"></script>
+    <!-- CORRECTED: Loaded official Filerobot Image Editor CDN -->
+    <script src="https://cloudimg.io"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
         #editor-container { width: 100vw; height: 100vh; }
@@ -18,30 +19,32 @@
     const urlParams = new URLSearchParams(window.location.search);
     let dynamicImage = urlParams.get('img');
 
-    const defaultImage = 'https://airstore.io';
+    // CORRECTED: Pointed fallback directly to a valid sample image file
+    const defaultImage = 'https://cloudimg.io';
     let imageToEdit = dynamicImage ? decodeURIComponent(dynamicImage) : defaultImage;
 
-    // IMPORTANT FIX: If it's an ImgBB link, append a timestamp string to force-bypass CORS cache blocks
+    // Cache-busting logic remains useful for strict CORS configurations
     if (imageToEdit.includes('ibb.co')) {
         const separator = imageToEdit.includes('?') ? '&' : '?';
         imageToEdit = `${imageToEdit}${separator}not-cached=${new Date().getTime()}`;
     }
 
-    const ImageEditor = new window.FilerobotImageEditor({
-        elementId: 'editor-container',
-        source: imageToEdit, 
-        // Force the editor to process external files correctly
-        loadableCanvas: true,
-        onSave: (imageObject, imageDesignState) => {
-            console.log('Saved Image Data:', imageObject);
-            alert('Image saved successfully!');
-        },
-        onClose: () => {
-            alert('Editor closed');
+    // CORRECTED: Updated constructor to match official API definitions
+    const filerobotImageEditor = new FilerobotImageEditor(
+        document.getElementById('editor-container'),
+        {
+            source: imageToEdit,
+            onSave: (imageObject, imageDesignState) => {
+                console.log('Saved Image Data:', imageObject);
+                alert('Image saved successfully! Check console for data.');
+            },
+            onClose: () => {
+                alert('Editor closed');
+            }
         }
-    });
+    );
 
-    ImageEditor.open();
+    filerobotImageEditor.render();
 </script>
 
 </body>
