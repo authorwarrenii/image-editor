@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Editor</title>
-    <!-- CORRECTED: Loaded official Filerobot Image Editor CDN -->
-    <script src="https://cloudimg.io"></script>
+    <!-- Loads Version 4+ Modern Core Bundle -->
+    <script src="https://scaleflex.cloudimg.io/v7/plugins/filerobot-image-editor/latest/filerobot-image-editor.min.js"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
         #editor-container { width: 100vw; height: 100vh; }
@@ -19,24 +19,20 @@
     const urlParams = new URLSearchParams(window.location.search);
     let dynamicImage = urlParams.get('img');
 
-    // CORRECTED: Pointed fallback directly to a valid sample image file
+    // Default image that explicitly allows CORS manipulation
     const defaultImage = 'https://cloudimg.io';
     let imageToEdit = dynamicImage ? decodeURIComponent(dynamicImage) : defaultImage;
 
-    // Cache-busting logic remains useful for strict CORS configurations
-    if (imageToEdit.includes('ibb.co')) {
-        const separator = imageToEdit.includes('?') ? '&' : '?';
-        imageToEdit = `${imageToEdit}${separator}not-cached=${new Date().getTime()}`;
-    }
-
-    // CORRECTED: Updated constructor to match official API definitions
+    // Correct instantiation format for Scaleflex Filerobot v4+
     const filerobotImageEditor = new FilerobotImageEditor(
         document.getElementById('editor-container'),
         {
             source: imageToEdit,
+            // Instructs the underlying canvas pipeline to send anonymous CORS requests
+            forceToCanvas: true,
             onSave: (imageObject, imageDesignState) => {
                 console.log('Saved Image Data:', imageObject);
-                alert('Image saved successfully! Check console for data.');
+                alert('Image processed successfully!');
             },
             onClose: () => {
                 alert('Editor closed');
@@ -44,6 +40,7 @@
         }
     );
 
+    // Replaced the broken .open() call with the modern rendering pipeline
     filerobotImageEditor.render();
 </script>
 
