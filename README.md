@@ -15,18 +15,23 @@
 <div id="editor-container"></div>
 
 <script>
-    // 1. Automatically grab the "?img=" parameter from your link URL
     const urlParams = new URLSearchParams(window.location.search);
-    const dynamicImage = urlParams.get('img');
+    let dynamicImage = urlParams.get('img');
 
-    // 2. Set a fallback image in case no image parameter is provided
-    const defaultImage = 'https://scaleflex.airstore.io/demo/stephen-walker-unsplash.jpg';
-    const imageToEdit = dynamicImage ? decodeURIComponent(dynamicImage) : defaultImage;
+    const defaultImage = 'https://airstore.io';
+    let imageToEdit = dynamicImage ? decodeURIComponent(dynamicImage) : defaultImage;
 
-    // 3. Initialize the Filerobot Image Editor with the dynamic image
+    // IMPORTANT FIX: If it's an ImgBB link, append a timestamp string to force-bypass CORS cache blocks
+    if (imageToEdit.includes('ibb.co')) {
+        const separator = imageToEdit.includes('?') ? '&' : '?';
+        imageToEdit = `${imageToEdit}${separator}not-cached=${new Date().getTime()}`;
+    }
+
     const ImageEditor = new window.FilerobotImageEditor({
         elementId: 'editor-container',
         source: imageToEdit, 
+        // Force the editor to process external files correctly
+        loadableCanvas: true,
         onSave: (imageObject, imageDesignState) => {
             console.log('Saved Image Data:', imageObject);
             alert('Image saved successfully!');
