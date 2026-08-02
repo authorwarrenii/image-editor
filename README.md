@@ -1,42 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Editor</title>
-    <script src="https://cloudimg.io"></script>
-    <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-        #editor-container { width: 100vw; height: 100vh; }
-    </style>
-</head>
-<body>
+📸 Minimalist Web Photo Editor
 
-<div id="editor-container"></div>
+A lightweight, single-page web application that embeds a full-featured image editor into the browser. It allows users to modify a default image or dynamically pass any image URL via a query parameter.
 
-<script>
-    const urlParams = new URLSearchParams(window.location.search);
-    let dynamicImage = urlParams.get('img');
+✨ Features
+🎛️ Full-Screen Editor: Automatically scales to fit any screen size (desktop or mobile).
+🔗 Dynamic Loading: Pass any web image to the editor dynamically using URL query parameters.
+💾 Callback System: Logs the modified image data directly to the browser console upon saving.
+📦 Filerobot Integration: Powered by the lightweight Scaleflex Filerobot Image Editor CDN.
 
-    // Cleaned string assignments pointing to an actual valid file asset
-    const defaultImage = 'https://cloudimg.io';
-    let imageToEdit = dynamicImage ? decodeURIComponent(dynamicImage) : defaultImage;
+🚀 Getting Started
+Prerequisites
+You only need a modern web browser (Chrome, Firefox, Edge, or Safari). No installation or local server configuration is required.
 
-    // Properly passes the DOM element container first, followed by options object
-    const container = document.getElementById('editor-container');
-    const filerobotImageEditor = new FilerobotImageEditor(container, {
-        source: imageToEdit,
-        onSave: (imageObject, imageDesignState) => {
-            console.log('Saved Image Data:', imageObject);
-            alert('Image saved! Look at your browser console to view output data.');
-        },
-        onClose: () => {
-            alert('Editor closed');
-        }
-    });
+Quick Start
+1. Copy the HTML code into a local file named `index.html`.
+2. Double-click `index.html` to open it directly in your web browser.
 
-    filerobotImageEditor.render();
-</script>
+🛠️ Usage & Query Parameters
+By default, the application loads a placeholder image. You can pass your own custom image URL using the `?img=` query parameter.
 
-</body>
-</html>
+Example URL Syntax:
+```text
+file:///path/to/your/index.html?img=https://example.com
+```
+Default Image: `https://cloudimg.io` (used if no parameter is provided).
+Dynamic Image: Automatically decodes and loads any properly formatted, hotlinkable image URL passed to the browser address bar.
+
+🏗️ Built With
+HTML5 & CSS3: For the structural workspace layout.
+JavaScript (Vanilla): For URL parameter parsing and state management.
+[Filerobot Image Editor](https://github.com): Provides the UI core for cropping, filtering, and exporting images.
